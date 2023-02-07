@@ -1,0 +1,878 @@
+{
+	"info": {
+		"_postman_id": "c4a83172-863e-494f-b34a-cfb838a92298",
+		"name": "clockifyAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22405095"
+	},
+	"item": [
+		{
+			"name": "Get all my workspaces",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all clients",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "page-size",
+							"value": "3",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add client with random names",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{{$randomFullName}}\",\r\n  \"note\": \"My note about client\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add client (with predefined name)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request. Status code is 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name is Created\", function () {\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client's name is 'Zika Pavlovic'\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.name).to.eql(\"Zika Pavlovic\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Zika Pavlovic\",\r\n  \"note\": \"My note about Zika Pavlovic\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get client via ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"        const response = pm.response.json();\r",
+							"        \r",
+							"    pm.test(\"Client name is Zika Pavlovic\", function () {\r",
+							"    pm.expect(response.name).to.eql(\"Zika Pavlovic\");\r",
+							"});\r",
+							"\r",
+							"//after visualy checking that workspace \"New exercise workspace\" have id \"63e16a3d82cdc63db0461fcf\"\r",
+							"\r",
+							"pm.test(\"Client belongs to New exercise workspace\", function () {\r",
+							"    pm.expect(response.workspaceId).to.eql(\"63e202094714cf743e0c63d1\");\r",
+							"});\r",
+							"\r",
+							"    console.log(response);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients/63e202094714cf743e0c63d1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients",
+						"63e202094714cf743e0c63d1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update created client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Client name is 'Pera Peric'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(\"Pera Peric\");\r",
+							"});\r",
+							"\r",
+							"//First, we have to check that \"New exercise workspace\" have workspaceId \"63dfd31783d3c52999ba8fb0\". We can check it visually in response in request \"Get all my workspaces\"\r",
+							"pm.test(\"Client belongs to 'New exercise workspace'worskpace\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.workspaceId).to.eql(\"63dfd31783d3c52999ba8fb0\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"archived\": true,\r\n  \"name\": \"Pera Peric\",\r\n  \r\n  \"note\": \"Original client is edited. New name is Pera Peric\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients/63e202094714cf743e0c63d1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients",
+						"63e202094714cf743e0c63d1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete created client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//after checking api documentation on https://clockify.me/developers-api, we expect status 200 OK after successfully deleting client\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Client 'Pera Peric' is deleted\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(\"Pera Peric\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients/63e202094714cf743e0c63d1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients",
+						"63e202094714cf743e0c63d1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get deleted client via ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//We expecting status code 404 Not found after deleting certain client, but we got status code 400 Bad Request. Client \"Pera Peric\" doesn't belongs to workspace \"New exercise workspace\". We can check this in request 'Get all clients'\r",
+							"\r",
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients/63e202094714cf743e0c63d1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients",
+						"63e202094714cf743e0c63d1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add new project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request 201\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name is Created\", function () {\r",
+							"    pm.response.to.have.status(\"Created\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Project name is 'First Project'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(\"First Project\");\r",
+							"});\r",
+							"\r",
+							"//We have to check that 'New exercise workspace' have workspaceId \"63dfd31783d3c52999ba8fb0\". This can be checked in request \"Get all my workspaces\"\r",
+							"pm.test(\"Project belongs to 'New exercise workspace' workspace\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.workspaceId).to.eql(\"63dfd31783d3c52999ba8fb0\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"First Project\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/projects",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"projects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get your user info",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new client",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "key",
+							"value": "x-api-key",
+							"type": "string"
+						},
+						{
+							"key": "value",
+							"value": "MTllY2JjMzEtNDdiYS00MzNkLWE4NjgtNWZkYjI3ODIxZGQx",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the x-api-key header generated by Postman.",
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Petar Petrovic\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add client to project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"//on https://clockify.me/developers-api in update project sections...response is \"Response Example (201 Created)\"\r",
+							"pm.test(\"Successful POST request\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"//Check if client's (\"Petar Petrovic\") clientID is 63e208ef82cdc63db046e64e\r",
+							"pm.test(\"Your client is Petar Petrovic\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.clientId).to.eql(\"63e208ef82cdc63db046e64e\");\r",
+							"});\r",
+							"\r",
+							"//check for 'New exercise workspace workspaceId\r",
+							"pm.test(\"Client belongs to 'New exercise workspace' workspace\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.workspaceId).to.eql(\"63dfd31783d3c52999ba8fb0\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"My API Project\",\r\n    \"clientId\": \"63e208ef82cdc63db046e64e\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/projects/63e2087e192143097fc888f4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"projects",
+						"63e2087e192143097fc888f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete project",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/projects/63e2087e192143097fc888f4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"projects",
+						"63e2087e192143097fc888f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Archive project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"archived\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/projects/63e2087e192143097fc888f4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"projects",
+						"63e2087e192143097fc888f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete archieved project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/projects/63e2087e192143097fc888f4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"projects",
+						"63e2087e192143097fc888f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checking for deleted project",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code name is Not Found\", function () {\r",
+							"    pm.response.to.have.status(\"Not Found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspace/{{workspaceId}}/projects/63e2087e192143097fc888f4",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspace",
+						"{{workspaceId}}",
+						"projects",
+						"63e2087e192143097fc888f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete created client",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//after checking api documentation on https://clockify.me/developers-api, we expect status 200 OK after successfully deleting client\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code name is OK\", function () {\r",
+							"    pm.response.to.have.status(\"OK\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Client 'Petar Petrovic' is deleted\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.name).to.eql(\"Petar Petrovic\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients/63e208ef82cdc63db046e64e",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients",
+						"63e208ef82cdc63db046e64e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Checking for deleted client",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/workspaces/{{workspaceId}}/clients/63e208ef82cdc63db046e64e",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}",
+						"clients",
+						"63e208ef82cdc63db046e64e"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.clockify.me/api/v1"
+		},
+		{
+			"key": "apiKey",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "workspaceId",
+			"value": "63dfd31783d3c52999ba8fb0"
+		}
+	]
+}
